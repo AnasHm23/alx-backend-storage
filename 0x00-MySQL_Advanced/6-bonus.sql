@@ -1,4 +1,5 @@
 -- creates a stored procedure AddBonus that adds a new correction for a student
+DROP PROCEDURE IF EXISTS AddBonus;
 DELIMITER //
 
 CREATE PROCEDURE AddBonus (
@@ -10,8 +11,8 @@ BEGIN
     DECLARE project_id INT;
 
     SELECT id INTO project_id
-    from projects
-    where name = project_name
+    FROM projects
+    WHERE name = project_name
     LIMIT 1;
 
     IF project_id IS NULL THEN
@@ -20,7 +21,7 @@ BEGIN
     END IF;
 
     INSERT INTO corrections (user_id, project_id, score)
-    VALUES (user_id, project_id, score)
+    VALUES (user_id, project_id, score);
 END //
 
 DELIMITER ;
