@@ -6,7 +6,7 @@ CREATE PROCEDURE AddBonus (
     IN score INT
 )
 BEGIN
-    DECLARE project_id;
+    DECLARE project_id INT;
 
     SELECT id INTO project_id
     from projects
