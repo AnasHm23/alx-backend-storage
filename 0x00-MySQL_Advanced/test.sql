@@ -1,11 +1,12 @@
-DELIMETER //
+DELIMITER //
 
-CREATE TRIGGER reset_email
-AFTER UPDATE ON `email`
+CREATE TRIGGER decrease_item_quantity
+AFTER INSERT ON `orders`
+FOR EACH ROW
 BEGIN
-    UPDATE 'email'
-    SET `valid_email` = NULL
-    WHERE id = NEW.email_id
+    UPDATE `items`
+    SET quantity = quantity - NEW.quantity
+    WHERE item_name = NEW.item_name;
 END //
 
-DELIMETER ;
+DELIMITER ;
