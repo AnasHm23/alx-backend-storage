@@ -10,15 +10,11 @@ CREATE PROCEDURE AddBonus (
 BEGIN
     DECLARE project_id;
 
-    SELECT id INTO project_id
-    from projects
-    where name = project_name
-    LIMIT 1;
-
-    IF project_id IS NULL THEN
-        INSERT INTO projects (name)
-        VALUES (project_name);
+    IF (SELECT COUNT(*) FROM projects WHERE name = project_name) = 0
+    THEN
+        INSERT INTO projects (name) VALUES (project_name);
     END IF;
+    SET project_id = (SELECT id FROM projects WHERE name = project_name LIMIT 1);
 
     INSERT INTO corrections (user_id, project_id, score)
     VALUES (user_id, project_id, score);
