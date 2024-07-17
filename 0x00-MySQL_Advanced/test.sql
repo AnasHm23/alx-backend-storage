@@ -1,16 +1,25 @@
--- creates a trigger that resets the attribute valid_email 
--- only when the email has been changed.
 DELIMITER //
 
-CREATE TRIGGER reset_email
-AFTER UPDATE ON `users`
-FOR EACH ROW
+CREATE PROCEDURE AddBonus (
+    IN user_id INT,
+    IN project_name VARCHAR(255),
+    IN score INT
+)
 BEGIN
-    IF OLD.email <> NEW.email THEN
-        UPDATE `users`
-        SET valid_email = NULL
-        WHERE id = NEW.id;
-    END if;
+    DECLARE project_id;
+
+    SELECT id INTO project_id
+    from projects
+    where name = project_name
+    LIMIT 1;
+
+    IF project_id IS NULL THEN
+        INSERT INTO projects (name)
+        VALUES (project_name);
+    END IF;
+
+    INSERT INTO corrections (user_id, project_id, score)
+    VALUES (user_id, project_id, score)
 END //
 
 DELIMITER ;
