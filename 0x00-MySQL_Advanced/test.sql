@@ -1,25 +1,19 @@
 DELIMITER //
 
-CREATE PROCEDURE AddBonus (
-    IN user_id INT,
-    IN project_name VARCHAR(255),
-    IN score INT
+DROP PROCEDURE IF EXISTS ComputeAverageScoreForUser;
+CREATE PROCEDURE ComputeAverageScoreForUser (
+    IN user_id INT
 )
 BEGIN
-    DECLARE project_id INT;
+    DECLARE average_score_for_user FLOAT;
 
-    SELECT id INTO project_id
-    from projects
-    where name = project_name
-    LIMIT 1;
+    SELECT AVG(score) INTO average_score_for_user
+    FROM corrections
+    WHERE user_id = user_id;
 
-    IF project_id IS NULL THEN
-        INSERT INTO projects (name)
-        VALUES (project_name);
-    END IF;
-
-    INSERT INTO corrections (user_id, project_id, score)
-    VALUES (user_id, project_id, score)
+    UPDATE users
+    SET average_score = average_score_for_user
+    WHERE id = user_id;
 END //
 
 DELIMITER ;
