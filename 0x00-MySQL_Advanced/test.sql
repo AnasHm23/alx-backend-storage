@@ -1,19 +1,11 @@
-DELIMITER //
+--  creates a view need_meeting that lists all students that have a score under 80 (strict) and no last_meeting or more than 1 month.
+DROP VIEW IF EXISTS need_meeting;
 
-DROP PROCEDURE IF EXISTS ComputeAverageScoreForUser;
-CREATE PROCEDURE ComputeAverageScoreForUser (
-    IN user_id INT
-)
-BEGIN
-    DECLARE average_score_for_user FLOAT;
-
-    SELECT AVG(score) INTO average_score_for_user
-    FROM corrections
-    WHERE user_id = user_id;
-
-    UPDATE users
-    SET average_score = average_score_for_user
-    WHERE id = user_id;
-END //
-
-DELIMITER ;
+CREATE VIEW need_meeting AS
+SELECT name 
+FROM students
+WHERE 
+    score < 80 AND
+    (last_meeting IS NULL 
+    OR
+    last_meeting < DATE_SUB(CURDATE(), INTERVAL 1 MONTH));
